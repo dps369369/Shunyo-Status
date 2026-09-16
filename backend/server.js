@@ -1,17 +1,30 @@
+// Load environment variables from .env
+require("dotenv").config({
+    path: "../.env"
+});
+
 // Import Express
 const express = require("express");
 
-// Create the Express application
+// Import Project routes
+const projectRoutes = require("./routes/projectRoutes");
+
+// Import PostgreSQL connection pool
+const pool = require("./config/database");
+
+// Create Express application
 const app = express();
 
-// Choose the port for our backend server
+// Server port
 const PORT = 369;
 
-// Middleware
-// Allows Express to understand JSON request bodies
+// Parse JSON request bodies
 app.use(express.json());
 
-// Basic test route
+// Register Project routes
+app.use(projectRoutes);
+
+// Root route
 app.get("/", (req, res) => {
     res.json({
         success: true,
@@ -19,7 +32,18 @@ app.get("/", (req, res) => {
     });
 });
 
-// Start the server
+// Test PostgreSQL connection
+pool.query("SELECT NOW()", (error, result) => {
+    if (error) {
+        console.error("PostgreSQL connection failed:", error);
+        return;
+    }
+
+    console.log("PostgreSQL connected successfully.");
+    console.log("Database time:", result.rows[0].now);
+});
+
+// Start server
 app.listen(PORT, () => {
     console.log(`Shunyo Status API running on http://localhost:${PORT}`);
 });
