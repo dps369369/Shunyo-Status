@@ -1,16 +1,14 @@
 // Import Express
 const express = require("express");
 
+// Import Project controller
+const projectController = require("../controllers/projectController");
+
 // Create router
 const router = express.Router();
 
-// Project test route
-router.get("/projects", (req, res) => {
-    res.json({
-        success: true,
-        message: "Projects route is working."
-    });
-});
+// GET /projects
+router.get("/projects", projectController.getProjects);
 
 // Export router
 module.exports = router;
