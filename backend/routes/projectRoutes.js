@@ -8,6 +8,8 @@ const projectController = require("../controllers/projectController");
 const router = express.Router();
 // POST /projects
 router.post("/projects", projectController.createProject);
+// PUT /projects/:id
+router.put("/projects/:id", projectController.updateProject);
 
 // GET /projects
 router.get("/projects", projectController.getProjects);

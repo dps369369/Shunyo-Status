@@ -36,9 +36,30 @@ const createProject = async (project) => {
     return result.rows[0];
 };
 
+// Update a Project
+const updateProject = async (id, project) => {
+    const result = await pool.query(
+        `UPDATE projects
+         SET name = $1,
+             status = $2,
+             last_update = $3
+         WHERE id = $4
+         RETURNING id, name, status, last_update`,
+        [
+            project.name,
+            project.status,
+            project.last_update,
+            id
+        ]
+    );
+
+    return result.rows[0];
+};
+
 // Export service functions
 module.exports = {
     getProjects,
     getProjectById,
-    createProject
+    createProject,
+    updateProject
 };

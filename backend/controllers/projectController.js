@@ -38,9 +38,32 @@ const createProject = async (req, res) => {
         data: result
     });
 };
+
+// Update a Project
+const updateProject = async (req, res) => {
+    const result = await projectService.updateProject(
+        req.params.id,
+        req.body
+    );
+
+    if (!result) {
+        return res.status(404).json({
+            success: false,
+            error: {
+                message: "Project not found."
+            }
+        });
+    }
+
+    res.json({
+        success: true,
+        data: result
+    });
+};
 // Export controller functions
 module.exports = {
     getProjects,
     getProjectById,
-    createProject
+    createProject,
+    updateProject
 };
