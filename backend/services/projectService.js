@@ -10,7 +10,19 @@ const getProjects = async () => {
     return result.rows;
 };
 
+// Get one Project by ID from PostgreSQL
+const getProjectById = async (id) => {
+    const result = await pool.query(
+        "SELECT id, name, status, last_update FROM projects WHERE id = $1",
+        [id]
+    );
+
+    return result.rows[0];
+};
+
 // Export service functions
 module.exports = {
-    getProjects
+    getProjects,
+    getProjectById
 };
+
