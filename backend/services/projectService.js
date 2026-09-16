@@ -50,7 +50,7 @@ const createProject = async (project) => {
 
     if (existingProject.rows.length > 0) {
         return {
-            validationError: "Project name already exists."
+            conflictError: "Project name already exists."
         };
     }
 
@@ -110,7 +110,7 @@ const updateProject = async (id, project) => {
 
     if (existingProject.rows.length > 0) {
         return {
-            validationError: "Project name already exists."
+            conflictError: "Project name already exists."
         };
     }
 

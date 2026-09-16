@@ -43,6 +43,18 @@ pool.query("SELECT NOW()", (error, result) => {
     console.log("Database time:", result.rows[0].now);
 });
 
+// Global error-handling middleware
+app.use((error, req, res, next) => {
+    console.error(error);
+
+    res.status(500).json({
+        success: false,
+        error: {
+            message: "Internal server error."
+        }
+    });
+});
+
 // Start server
 app.listen(PORT, () => {
     console.log(`Shunyo Status API running on http://localhost:${PORT}`);
