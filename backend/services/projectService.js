@@ -1,5 +1,16 @@
+
 // Import PostgreSQL connection pool
 const pool = require("../config/database");
+
+// Allowed Project statuses
+const allowedStatuses = [
+    "FOCUSED",
+    "PLANNED",
+    "BLOCKED",
+    "PAUSED",
+    "COMPLETED",
+    "FAILED"
+];
 
 // Get all Projects from PostgreSQL
 const getProjects = async () => {
@@ -22,6 +33,37 @@ const getProjectById = async (id) => {
 
 // Create a new Project
 const createProject = async (project) => {
+    if (
+        typeof project.name !== "string" ||
+        project.name.trim() === "" ||
+        project.name.length > 100
+    ) {
+        return {
+            validationError: "Project name must be a non-empty string."
+        };
+    }
+    // Check whether the Project name already exists
+    const existingProject = await pool.query(
+        "SELECT id FROM projects WHERE name = $1",
+        [project.name]
+    );
+
+    if (existingProject.rows.length > 0) {
+        return {
+            validationError: "Project name already exists."
+        };
+    }
+
+    // Check whether the Project status is valid
+    if (
+        typeof project.status !== "string" ||
+        !allowedStatuses.includes(project.status)
+    ) {
+        return {
+            validationError: "Invalid Project status."
+        };
+    }
+
     const result = await pool.query(
         `INSERT INTO projects (name, status, last_update)
          VALUES ($1, $2, $3)
@@ -38,6 +80,40 @@ const createProject = async (project) => {
 
 // Update a Project
 const updateProject = async (id, project) => {
+
+    // Validate Project name
+    if (
+        typeof project.name !== "string" ||
+        project.name.trim() === "" ||
+        project.name.length > 100
+    ) {
+        return {
+            validationError:
+                "Project name must be a non-empty string with a maximum of 100 characters."
+        };
+    }
+
+    // Check whether the Project status is valid
+    if (
+        typeof project.status !== "string" ||
+        !allowedStatuses.includes(project.status)
+    ) {
+        return {
+            validationError: "Invalid Project status."
+        };
+    }
+    // Check whether another Project already uses this name
+    const existingProject = await pool.query(
+        "SELECT id FROM projects WHERE name = $1 AND id != $2",
+        [project.name, id]
+    );
+
+    if (existingProject.rows.length > 0) {
+        return {
+            validationError: "Project name already exists."
+        };
+    }
+
     const result = await pool.query(
         `UPDATE projects
          SET name = $1,
@@ -67,6 +143,7 @@ const deleteProject = async (id) => {
 
     return result.rows[0];
 };
+
 
 // Export service functions
 module.exports = {

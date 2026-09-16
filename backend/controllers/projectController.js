@@ -33,6 +33,16 @@ const getProjectById = async (req, res) => {
 const createProject = async (req, res) => {
     const result = await projectService.createProject(req.body);
 
+    // Return 400 if the Project status is invalid
+    if (result.validationError) {
+        return res.status(400).json({
+            success: false,
+            error: {
+                message: result.validationError
+            }
+        });
+    }
+
     res.status(201).json({
         success: true,
         data: result
@@ -46,6 +56,17 @@ const updateProject = async (req, res) => {
         req.body
     );
 
+    // Return 400 if the Project status is invalid
+    if (result.validationError) {
+        return res.status(400).json({
+            success: false,
+            error: {
+                message: result.validationError
+            }
+        });
+    }
+
+    // Return 404 if the Project does not exist
     if (!result) {
         return res.status(404).json({
             success: false,
@@ -60,6 +81,7 @@ const updateProject = async (req, res) => {
         data: result
     });
 };
+
 // Delete a Project
 const deleteProject = async (req, res) => {
     const result = await projectService.deleteProject(req.params.id);
