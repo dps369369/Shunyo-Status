@@ -6,6 +6,8 @@ const projectController = require("../controllers/projectController");
 
 // Create router
 const router = express.Router();
+// POST /projects
+router.post("/projects", projectController.createProject);
 
 // GET /projects
 router.get("/projects", projectController.getProjects);

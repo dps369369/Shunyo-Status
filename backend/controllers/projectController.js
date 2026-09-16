@@ -28,8 +28,19 @@ const getProjectById = async (req, res) => {
         data: result
     });
 };
+
+// Create a new Project
+const createProject = async (req, res) => {
+    const result = await projectService.createProject(req.body);
+
+    res.status(201).json({
+        success: true,
+        data: result
+    });
+};
 // Export controller functions
 module.exports = {
     getProjects,
-    getProjectById
+    getProjectById,
+    createProject
 };
