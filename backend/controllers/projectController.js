@@ -1,8 +1,13 @@
-// Project controller
-const getProjects = (req, res) => {
+// Import Project service
+const projectService = require("../services/projectService");
+
+// Get Projects
+const getProjects = async (req, res) => {
+    const result = await projectService.getProjects();
+
     res.json({
         success: true,
-        message: "Projects controller is working."
+        data: result
     });
 };
 
