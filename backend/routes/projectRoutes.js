@@ -10,7 +10,8 @@ const router = express.Router();
 router.post("/projects", projectController.createProject);
 // PUT /projects/:id
 router.put("/projects/:id", projectController.updateProject);
-
+// DELETE /projects/:id
+router.delete("/projects/:id", projectController.deleteProject);
 // GET /projects
 router.get("/projects", projectController.getProjects);
 // GET /projects/:id

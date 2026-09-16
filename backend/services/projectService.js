@@ -56,10 +56,23 @@ const updateProject = async (id, project) => {
     return result.rows[0];
 };
 
+// Delete a Project
+const deleteProject = async (id) => {
+    const result = await pool.query(
+        `DELETE FROM projects
+         WHERE id = $1
+         RETURNING id, name, status, last_update`,
+        [id]
+    );
+
+    return result.rows[0];
+};
+
 // Export service functions
 module.exports = {
     getProjects,
     getProjectById,
     createProject,
-    updateProject
+    updateProject,
+    deleteProject
 };

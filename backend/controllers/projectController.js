@@ -60,10 +60,29 @@ const updateProject = async (req, res) => {
         data: result
     });
 };
+// Delete a Project
+const deleteProject = async (req, res) => {
+    const result = await projectService.deleteProject(req.params.id);
+
+    if (!result) {
+        return res.status(404).json({
+            success: false,
+            error: {
+                message: "Project not found."
+            }
+        });
+    }
+
+    res.json({
+        success: true,
+        data: result
+    });
+};
 // Export controller functions
 module.exports = {
     getProjects,
     getProjectById,
     createProject,
-    updateProject
+    updateProject,
+    deleteProject
 };
